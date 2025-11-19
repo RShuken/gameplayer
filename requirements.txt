@@ -1,0 +1,16 @@
+torch
+transformers
+accelerate
+pillow
+opencv-python
+mss
+pyautogui
+qwen-vl-utils
+tiktoken
+einops
+transformers_stream_generator
+six
+fastapi
+uvicorn
+python-multipart
+requests

@@ -42,6 +42,8 @@ class VLM:
 
     def predict(self, image: np.ndarray, instruction: str) -> str:
         if self.dummy:
+            if "banana" in instruction.lower():
+                return '{"type": "say", "message": "BANANA FOUND, DAN LOOK THERE IS A BANNA HERE LOOK DAN LOOK BANANA!"}'
             return '{"type": "press_key", "key": "w", "duration": 1.0}'
 
         # Convert numpy (BGR) to PIL (RGB)

@@ -5,6 +5,26 @@ import re
 from perception import ScreenCapture
 from controller import Controller
 from model import VLM, RemoteVLM
+import os
+
+PERSONAS = {
+    "1": {
+        "name": "Game Player",
+        "instruction": "Walk forward, explore, and interact with objects."
+    },
+    "2": {
+        "name": "Banana Finder",
+        "instruction": "Scan the screen for bananas. If you see a banana, use the 'say' action with the exact message: 'BANANA FOUND, DAN LOOK THERE IS A BANNA HERE LOOK DAN LOOK BANANA!'. If you don't see one, use 'move_mouse' to look around or 'wait'."
+    },
+    "3": {
+        "name": "Elderly Assistant",
+        "instruction": "You are a helpful, patient computer tutor for an elderly person. Watch what is happening on the screen. If the user seems stuck or needs help, use the 'say' action to gently guide them. If everything is fine, just 'wait'."
+    },
+    "4": {
+        "name": "Custom",
+        "instruction": "CUSTOM" # Placeholder
+    }
+}
 
 class Agent:
     def __init__(self, dummy_model=False, remote_url=None):
@@ -49,6 +69,12 @@ class Agent:
             duration = action_data.get("duration", 1.0)
             print(f"Executing: Wait for {duration}s")
             time.sleep(duration)
+
+        elif action_type == "say":
+            message = action_data.get("message", "")
+            print(f"Agent says: {message}")
+            # Use macOS 'say' command for TTS
+            os.system(f'say "{message}"')
             
         else:
             print(f"Unknown action type: {action_type}")
@@ -86,14 +112,14 @@ class Agent:
             "- {\"type\": \"press_key\", \"key\": \"<key>\", \"duration\": <float>} (keys: w, a, s, d, space, f, etc.)\n"
             "- {\"type\": \"move_mouse\", \"x\": <int>, \"y\": <int>} (x, y are relative offsets in pixels. Positive x is right, negative is left.)\n"
             "- {\"type\": \"click\", \"button\": \"left\"| \"right\"}\n"
-            "- {\"type\": \"wait\", \"duration\": <float>}\n\n"
+            "- {\"type\": \"wait\", \"duration\": <float>}\n"
+            "- {\"type\": \"say\", \"message\": \"<text>\"} (Use this to speak to the user, e.g., to report findings or offer help.)\n\n"
             "Look at the screenshot. Respond ONLY with a valid JSON object representing the best next action."
         )
         
         debug_prompt = (
-            f"You are an AI agent playing a game. Your goal is: {instruction}.\n"
-            "Look at the screenshot. Describe what you see in detail (UI elements, environment, enemies, etc.). "
-            "Then, explain what action you would take and why."
+            f"You are an AI agent observing a screen. Your goal is: {instruction}.\\n"
+            "Describe what you see in the screenshot. Then explain what you would do next."
         )
 
         try:
@@ -112,6 +138,25 @@ class Agent:
                     action_data = self.parse_json_response(response)
                     self.execute_action(action_data)
                 else:
+                    # In debug mode, we still want to allow 'say' actions if they are explicitly returned
+                    # But usually debug mode returns natural language. 
+                    # However, if the VLM decides to output JSON in debug mode (which it might if instructed), we should handle it.
+                    # OR, we can check if the response contains the specific banana phrase and say it manually.
+                    
+                    # Better approach: Try to parse JSON. If it's a 'say' action, execute it.
+                    try:
+                        possible_action = self.parse_json_response(response)
+                        if possible_action.get("type") == "say":
+                            self.execute_action(possible_action)
+                    except:
+                        pass
+
+                    # Fallback: If the model mentions the specific phrase in text (but not JSON), say it anyway.
+                    # This handles the case where the debug prompt causes the model to just describe the action.
+                    target_phrase = "BANANA FOUND, DAN LOOK THERE IS A BANNA HERE LOOK DAN LOOK BANANA!"
+                    if "BANANA FOUND, DAN LOOK" in response.upper() and target_phrase not in str(possible_action if 'possible_action' in locals() else ""):
+                         self.execute_action({"type": "say", "message": target_phrase})
+                        
                     # Wait longer in debug mode to let user read
                     time.sleep(5)
                 
@@ -150,4 +195,15 @@ if __name__ == "__main__":
         url = input(f"Enter Server URL [{DEFAULT_SERVER}]: ").strip() or DEFAULT_SERVER
         agent = Agent(remote_url=url)
 
-    agent.run("Walk forward, explore, and interact with objects.", debug_mode=debug)
+    print("\nSelect Persona:")
+    for key, p in PERSONAS.items():
+        print(f"{key}. {p['name']}")
+    
+    p_choice = input("Enter choice (1-4) [1]: ").strip() or "1"
+    
+    if p_choice == "4":
+        instruction = input("Enter custom instruction: ").strip()
+    else:
+        instruction = PERSONAS.get(p_choice, PERSONAS["1"])["instruction"]
+
+    agent.run(instruction, debug_mode=debug)

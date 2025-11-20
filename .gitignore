@@ -2,3 +2,8 @@
 __pycache__/
 *.pyc
 .DS_Store
+.env
+tensordock_key
+tensordock_key.pub
+server_info.txt
+*.log

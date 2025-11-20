@@ -1,0 +1,75 @@
+======================================================================
+BATCH SCREENSHOT TEST REPORT
+======================================================================
+Generated: 2025-11-19 13:15:59
+Server: http://91.150.160.37:43002
+Total tests: 4
+Successful: 4
+Failed: 0
+
+======================================================================
+TEST #1: Genshin-Impact-Zhongli-Gameplay.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 1380x775
+File size: 211.0 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is from the game Genshin Impact, set in a grassy area with a rocky outcrop in the background.
+   - The player character is a male with dark hair, wearing a black and white outfit with a cape. He is standing with his arms outstretched, possibly in a defensive or preparatory stance.
+   - There are several glowing objects floating in the air, including some that resemble floating rocks or crystals.
+   - The user interface (UI) includes various icons and indicators, such as the player's level (87), health (2123),
+----------------------------------------------------------------------
+
+======================================================================
+TEST #2: genshin3.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 3840x2160
+File size: 521.7 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is set in a picturesque, serene environment with a mix of natural and man-made elements. There is a large rock formation with a pagoda-like structure on top, illuminated by a bright light. The area is surrounded by lush greenery, including grass, trees, and bushes. The sky is clear with a few clouds, and the overall atmosphere is calm and peaceful.
+   - In the foreground, there is a character standing on a grassy area. The character is wearing a red and black outfit with intricate designs and has a blindfold. The character appears to be in a neutral
+----------------------------------------------------------------------
+
+======================================================================
+TEST #3: genshin_screenshot.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 1024x449
+File size: 125.7 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is set in a lush, green landscape with rolling hills and a clear blue sky. There is a large, glowing, blue fountain in the center, which appears to be a significant point of interest.
+   - In the background, there is a castle-like structure with multiple towers and spires, suggesting a medieval or fantasy setting.
+   - The terrain is dotted with trees and small shrubs, and there are several stone pillars and statues scattered around the area.
+
+2) **Character/UI Information:**
+   - The player character is a female character with long purple hair, wearing a blue
+----------------------------------------------------------------------
+
+======================================================================
+TEST #4: genshinimage.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 1280x720
+File size: 80.9 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is set in a snowy, icy environment with a large, frozen statue in the center. The ground is covered in ice, and there are snow-covered rocks and trees in the background.
+   - The character in the foreground is a young girl with pink hair, wearing a blue and white outfit with a flower accessory. She is holding a bow and appears to be aiming it at the statue.
+   - The sky is dark, suggesting it might be nighttime or an overcast day.
+
+2) **Character/UI Information:**
+   - The character is a female with pink hair and a flower
+----------------------------------------------------------------------
+

@@ -1,0 +1,116 @@
+======================================================================
+BATCH SCREENSHOT TEST REPORT
+======================================================================
+Generated: 2025-11-19 13:23:21
+Server: http://91.150.160.37:43002
+Total tests: 4
+Successful: 4
+Failed: 0
+
+======================================================================
+TEST #1: Genshin-Impact-Zhongli-Gameplay.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 1380x775
+File size: 211.0 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is from the game Genshin Impact, set in a grassy area with a rocky outcrop in the background.
+   - The player character is a male with dark hair, wearing a black and white outfit with a cape. He is standing with his arms outstretched, possibly in a defensive or preparatory stance.
+   - There are several glowing objects floating in the air, including some that resemble floating rocks or crystals.
+   - The user interface (UI) includes various icons and indicators, such as the player's level (87), health (2123), and stamina (25055/25055).
+   - The quest indicator at the top left suggests obtaining Azurite from Bloatty Floaties in the quest area.
+
+2) **Character/UI Information:**
+   - The player character is a male with dark hair.
+   - The UI shows the player's level (87), health (2123), and stamina (25055/25055).
+   - The quest indicator at the top left suggests obtaining Azurite from Bloatty Floaties in the quest area.
+   - The player has four characters in their party, with Xiao, Klee, Bennett, and Zhongli visible in the UI.
+
+3) **Action/Objective Next:**
+   - The most appropriate action next would be to interact with the floating objects, likely to obtain Azurite as indicated by the quest indicator. This could involve using the character's abilities or simply approaching the objects to collect them.
+   - The player should also consider the health and stamina levels of their characters, ensuring they are prepared for any potential combat or challenges ahead.
+----------------------------------------------------------------------
+
+======================================================================
+TEST #2: genshin3.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 3840x2160
+File size: 521.7 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is set in a picturesque, serene environment with a mix of natural and man-made elements. There is a large rock formation with a pagoda-like structure on top, illuminated by a bright light. The area is surrounded by lush greenery, including grass, trees, and bushes. The sky is clear with a few clouds, and the overall atmosphere is calm and peaceful.
+   - In the foreground, there is a character standing on a grassy area. The character is wearing a red and black outfit with intricate designs and has a blindfold. The character appears to be in a neutral stance, facing the viewer.
+
+2) **Character/UI Information:**
+   - The character in the foreground is marked with a red icon, indicating they are the player's character.
+   - The user interface (UI) on the right side of the screen shows the player's party members: Beidou, Diluc, Ganyu, and Jean. Each character has a small icon with their name and a health bar.
+   - The top left corner of the screen displays a map with a diamond marker indicating the location of the incident scene.
+   - The top right corner shows various icons for actions such as inventory, skills, and other game functions.
+   - The bottom left corner has a chat icon, and the bottom right corner displays the player's unique ID (UID).
+
+3) **Action/Objective Next:**
+   - The most appropriate action next would be to head towards the diamond marker on the map, which indicates the location of the incident scene. This is likely where the player needs to go to check out the situation, as suggested by the UI text.
+----------------------------------------------------------------------
+
+======================================================================
+TEST #3: genshin_screenshot.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 1024x449
+File size: 125.7 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is set in a lush, green landscape with rolling hills and a clear blue sky. There is a large, glowing, blue fountain in the center, which appears to be a significant point of interest.
+   - In the background, there is a castle-like structure with multiple towers and spires, suggesting a medieval or fantasy setting.
+   - The terrain is dotted with trees and small shrubs, and there are several stone pillars and statues scattered around the area.
+
+2) **Character/UI Information:**
+   - The player character is a female character with long purple hair, wearing a blue outfit. She is standing in front of the fountain, facing the camera.
+   - The user interface (UI) includes various icons and information:
+     - Top left: A minimap showing the player's location and nearby points of interest.
+     - Top center: The player's adventure rank, which is 60.
+     - Top right: Various icons indicating different statuses and abilities, such as health, stamina, and skill cooldowns.
+     - Bottom left: The player's level, which is 90, and their current and maximum health points.
+     - Bottom right: Icons for different abilities and items, including a sword, a shield, and a book.
+
+3) **Action/Objective:**
+   - Given the player's level and the presence of the fountain, it seems appropriate to interact with the fountain. The fountain could be a source of resources, a quest point, or a location to perform a specific action.
+   - The player might also consider exploring the surrounding area, as indicated by the minimap, to find other points of interest or potential enemies.
+
+In summary, the next appropriate action would be to interact with the fountain, possibly to collect resources or complete a quest, and then explore the surrounding area to find more objectives or enemies.
+----------------------------------------------------------------------
+
+======================================================================
+TEST #4: genshinimage.jpg
+======================================================================
+Status: ✓ SUCCESS
+Image size: 1280x720
+File size: 80.9 KB
+
+Model Response:
+----------------------------------------------------------------------
+1) **Scene Description:**
+   - The scene is set in a snowy, icy environment with a large, frozen statue in the center. The ground is covered in ice, and there are snow-covered rocks and trees in the background.
+   - The character in the foreground is a young girl with pink hair, wearing a blue and white outfit with a flower accessory. She is holding a bow and appears to be aiming it at the statue.
+   - The sky is dark, suggesting it might be nighttime or an overcast day.
+
+2) **Character/UI Information:**
+   - The character is a female with pink hair and a flower accessory.
+   - The UI shows the player's character at the bottom left corner, with the character's name "Albedo" highlighted.
+   - The player's health and energy bars are visible at the bottom center.
+   - The mini-map in the top left corner shows the player's current location and the surrounding area.
+   - The bottom right corner shows the player's inventory and other game-related icons.
+
+3) **Action/Objective:**
+   - The most appropriate action next would be to aim and shoot the bow at the statue. The character appears to be preparing to use the bow, and the statue seems to be a target of interest.
+   - The objective could be to interact with the statue, possibly to solve a puzzle or trigger an event. The statue might contain a quest item or be part of a larger game mechanic.
+----------------------------------------------------------------------
+

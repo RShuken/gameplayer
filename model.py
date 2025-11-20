@@ -1,8 +1,12 @@
-import torch
-from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
-from qwen_vl_utils import process_vision_info
-from PIL import Image
 import numpy as np
+from PIL import Image
+import sys
+
+# Lazy imports for heavy libraries
+torch = None
+Qwen2VLForConditionalGeneration = None
+AutoProcessor = None
+process_vision_info = None
 
 class VLM:
     def __init__(self, model_path="Qwen/Qwen2-VL-7B-Instruct", device="auto", load_in_4bit=False, dummy=False):
@@ -10,6 +14,17 @@ class VLM:
         if self.dummy:
             print("VLM initialized in DUMMY mode. No model loaded.")
             return
+
+        # Import heavy dependencies only when needed
+        global torch, Qwen2VLForConditionalGeneration, AutoProcessor, process_vision_info
+        try:
+            import torch
+            from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
+            from qwen_vl_utils import process_vision_info
+        except ImportError as e:
+            print(f"Error importing model dependencies: {e}")
+            print("Please install torch, transformers, and qwen-vl-utils to use the local model.")
+            sys.exit(1)
 
         print(f"Loading model from {model_path}...")
         # Note: 4bit loading requires bitsandbytes which might be tricky on Mac. 
@@ -27,7 +42,7 @@ class VLM:
 
     def predict(self, image: np.ndarray, instruction: str) -> str:
         if self.dummy:
-            return "walk_forward"
+            return '{"type": "press_key", "key": "w", "duration": 1.0}'
 
         # Convert numpy (BGR) to PIL (RGB)
         pil_image = Image.fromarray(image[..., ::-1]) # BGR to RGB

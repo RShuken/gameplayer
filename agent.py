@@ -1,9 +1,10 @@
 import time
 import traceback
+import json
+import re
 from perception import ScreenCapture
 from controller import Controller
 from model import VLM, RemoteVLM
-import re
 
 class Agent:
     def __init__(self, dummy_model=False, remote_url=None):
@@ -17,52 +18,102 @@ class Agent:
             
         self.running = False
 
-    def parse_action(self, response: str):
+    def execute_action(self, action_data: dict):
         """
-        Parses the VLM response to determine the action.
-        Expected format: "Action: <command>" or just natural language describing the action.
-        For this MVP, we'll look for keywords.
+        Executes the action specified in the dictionary.
+        Expected keys: "type", and type-specific params.
         """
-        response = response.lower()
+        action_type = action_data.get("type")
         
-        if "walk forward" in response or "move forward" in response or "w key" in response:
-            print("Action: Walk Forward")
-            self.controller.press_key("w", duration=1.0)
-        elif "turn left" in response:
-            print("Action: Turn Left")
-            self.controller.move_mouse(-100, 0)
-        elif "turn right" in response:
-            print("Action: Turn Right")
-            self.controller.move_mouse(100, 0)
-        elif "attack" in response or "click" in response:
-            print("Action: Attack")
-            self.controller.click()
+        if action_type == "press_key":
+            key = action_data.get("key")
+            duration = action_data.get("duration", 0.1)
+            print(f"Executing: Press '{key}' for {duration}s")
+            self.controller.press_key(key, duration)
+            
+        elif action_type == "move_mouse":
+            x = action_data.get("x", 0)
+            y = action_data.get("y", 0)
+            print(f"Executing: Move mouse ({x}, {y})")
+            self.controller.move_mouse(x, y) # Note: This is absolute or relative? Controller says moveTo (absolute). 
+            # We might want relative for turning. Let's check Controller implementation or assume relative for now in prompt?
+            # Actually, controller.py uses moveTo (absolute). We should probably change controller to moveRel for turning.
+            # For now, let's assume the VLM gives us relative offsets and we fix Controller to support it.
+            
+        elif action_type == "click":
+            button = action_data.get("button", "left")
+            print(f"Executing: Click {button}")
+            self.controller.click(button)
+            
+        elif action_type == "wait":
+            duration = action_data.get("duration", 1.0)
+            print(f"Executing: Wait for {duration}s")
+            time.sleep(duration)
+            
         else:
-            print(f"No specific action parsed from: {response}")
+            print(f"Unknown action type: {action_type}")
 
-    def run(self, instruction: str = "Explore the world"):
+    def parse_json_response(self, response: str) -> dict:
+        """
+        Attempts to extract and parse JSON from the VLM response.
+        """
+        try:
+            # fast path: if it's pure JSON
+            return json.loads(response)
+        except json.JSONDecodeError:
+            # slow path: look for markdown code blocks or just braces
+            match = re.search(r'\{.*\}', response, re.DOTALL)
+            if match:
+                try:
+                    return json.loads(match.group(0))
+                except:
+                    pass
+            print(f"Failed to parse JSON from: {response}")
+            return {"type": "wait"}
+
+    def run(self, instruction: str = "Explore the world", debug_mode: bool = False):
         self.running = True
         print(f"Agent started with instruction: {instruction}")
-        print("Press Ctrl+C to stop or move mouse to corner (failsafe).")
+        if debug_mode:
+            print("DEBUG MODE ACTIVE: Actions disabled. Model will describe the scene.")
+        else:
+            print("Press Ctrl+C to stop or move mouse to corner (failsafe).")
         
+        # Define prompts
+        action_prompt = (
+            f"You are an AI agent playing a game. Your goal is: {instruction}.\n"
+            "Available actions:\n"
+            "- {\"type\": \"press_key\", \"key\": \"<key>\", \"duration\": <float>} (keys: w, a, s, d, space, f, etc.)\n"
+            "- {\"type\": \"move_mouse\", \"x\": <int>, \"y\": <int>} (x, y are relative offsets in pixels. Positive x is right, negative is left.)\n"
+            "- {\"type\": \"click\", \"button\": \"left\"| \"right\"}\n"
+            "- {\"type\": \"wait\", \"duration\": <float>}\n\n"
+            "Look at the screenshot. Respond ONLY with a valid JSON object representing the best next action."
+        )
+        
+        debug_prompt = (
+            f"You are an AI agent playing a game. Your goal is: {instruction}.\n"
+            "Look at the screenshot. Describe what you see in detail (UI elements, environment, enemies, etc.). "
+            "Then, explain what action you would take and why."
+        )
+
         try:
             while self.running:
-                start_time = time.time()
-                
                 # 1. Perceive
                 frame = self.perception.capture()
                 
                 # 2. Reason
-                # We construct a prompt that includes the high-level goal
-                prompt = f"You are playing a game. Your goal is: {instruction}. Look at the screenshot. What should you do next? Output the action clearly."
+                prompt = debug_prompt if debug_mode else action_prompt
                 response = self.vlm.predict(frame, prompt)
-                print(f"VLM Thought: {response}")
                 
-                # 3. Act
-                self.parse_action(response)
+                print(f"\n[VLM Response]: {response}\n")
                 
-                # Rate limiting (though inference is the real limit)
-                # time.sleep(0.1) 
+                if not debug_mode:
+                    # 3. Act
+                    action_data = self.parse_json_response(response)
+                    self.execute_action(action_data)
+                else:
+                    # Wait longer in debug mode to let user read
+                    time.sleep(5)
                 
         except KeyboardInterrupt:
             print("Agent stopped by user.")
@@ -73,23 +124,30 @@ class Agent:
             self.running = False
 
 if __name__ == "__main__":
-    # Mode Selection
+    # Default to the known TensorDock server
+    DEFAULT_SERVER = "http://91.150.160.37:43002"
+    
     print("Select Mode:")
-    print("1. Dummy Mode (Test loop)")
+    print("1. Remote Cloud (TensorDock) - Default")
     print("2. Local GPU (Qwen2-VL)")
-    print("3. Remote Cloud (TensorDock)")
+    print("3. Dummy Mode (Test loop)")
+    print("4. Debug Mode (Remote VLM, No Actions)")
     
-    choice = input("Enter choice (1/2/3): ").strip()
+    choice = input("Enter choice (1/2/3/4) [1]: ").strip()
     
-    if choice == "1":
-        agent = Agent(dummy_model=True)
-    elif choice == "2":
+    debug = False
+    if choice == "2":
         agent = Agent(dummy_model=False)
     elif choice == "3":
-        url = input("Enter Server URL (e.g., http://123.45.67.89:8000): ").strip()
-        agent = Agent(remote_url=url)
-    else:
-        print("Invalid choice, defaulting to Dummy.")
         agent = Agent(dummy_model=True)
+    elif choice == "4":
+        # Debug mode uses remote server but sets debug flag
+        url = input(f"Enter Server URL [{DEFAULT_SERVER}]: ").strip() or DEFAULT_SERVER
+        agent = Agent(remote_url=url)
+        debug = True
+    else:
+        # Default to 1
+        url = input(f"Enter Server URL [{DEFAULT_SERVER}]: ").strip() or DEFAULT_SERVER
+        agent = Agent(remote_url=url)
 
-    agent.run("Walk forward and find a chest")
+    agent.run("Walk forward, explore, and interact with objects.", debug_mode=debug)

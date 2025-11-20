@@ -10,9 +10,9 @@ class Controller:
     def __init__(self):
         pass
 
-    def move_mouse(self, x: int, y: int, duration: float = 0.1):
-        """Moves mouse to (x, y) over 'duration' seconds."""
-        pyautogui.moveTo(x, y, duration=duration)
+    def move_mouse(self, x_offset: int, y_offset: int, duration: float = 0.1):
+        """Moves mouse relative to current position by (x_offset, y_offset)."""
+        pyautogui.move(x_offset, y_offset, duration=duration)
 
     def click(self, button: Literal['left', 'right', 'middle'] = 'left'):
         """Clicks the specified mouse button."""
